@@ -16,12 +16,14 @@ ActiveRecord::Schema.define(version: 20171111174259) do
   enable_extension "plpgsql"
 
   create_table "drugs", force: :cascade do |t|
-    t.text "drug_type"
+    t.text "drug_type", null: false
+    t.datetime "drug_created", null: false
+    t.datetime "drug_updated", null: false
     t.text "name", null: false
-    t.text "description"
+    t.text "description", null: false
     t.text "cas_number", null: false
     t.text "unii", null: false
-    t.text "state", null: false
+    t.text "state"
     t.text "groups", null: false, array: true
     t.text "indication", null: false
     t.text "pharmacodynamics", null: false
@@ -30,10 +32,12 @@ ActiveRecord::Schema.define(version: 20171111174259) do
     t.text "metabolism", null: false
     t.text "absorption", null: false
     t.text "half_life", null: false
-    t.text "protein_binding"
+    t.text "protein_binding", null: false
     t.text "route_of_elimination", null: false
     t.text "volume_of_distribution", null: false
     t.text "clearance", null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
 end

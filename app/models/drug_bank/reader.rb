@@ -26,8 +26,13 @@ module DrugBank
     end
 
     def process
-      type = node.attributes["type"]
-      drug = Drug.new(drug_type: type&.value)
+      meta = node.attributes.transform_values(&:value)
+      drug = Drug.new(
+        drug_type: meta["type"],
+        drug_created: DateTime.parse(meta["created"]),
+        drug_updated: DateTime.parse(meta["updated"]))
+
+
 
       node.element_children.each do |element|
         attr_name = element.name.parameterize.underscore.to_sym
