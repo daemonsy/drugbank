@@ -1,6 +1,7 @@
 module DrugBank
   class Reader
     PARSERS = {
+      drugbank_id: Parsers::DrugIdentification,
       name: Parsers::Attribute,
       type: Parsers::Attribute,
       description: Parsers::Attribute,
@@ -31,19 +32,15 @@ module DrugBank
         drug_type: meta["type"],
         drug_created: DateTime.parse(meta["created"]),
         drug_updated: DateTime.parse(meta["updated"]))
-
-
+      drug.raw_sources.build(source: :drugbank, data: node.to_xml, data_type: :xml)
 
       node.element_children.each do |element|
         attr_name = element.name.parameterize.underscore.to_sym
         parser = PARSERS[attr_name]
-        if parser
-          value = parser.perform(element, node)
-          drug.write_attribute(attr_name, value)
-        end
+        parser.perform({ node: element, parent: node, record: drug, attr_name: attr_name }) if parser
       end
 
-      drug.save!
+      drug.tap(&:save!)
     end
 
   private
